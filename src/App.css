@@ -1,0 +1,52 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: center;
+}
+.main {
+  padding-bottom: 30px;
+  flex: 1;
+}
+.image-container {
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.image-container img {
+  max-width: 200px;
+  max-height: 100px;
+  height: auto;
+}
+.footer {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  bottom: 0;
+}
+.cards-tray {
+  display: flex;
+  flex-wrap: wrap;
+}
+.card {
+  width: 20%; /* 20% width to fit 5 cards per row */
+  box-sizing: border-box; /* Prevent padding or borders from affecting width */
+  padding: 10px;
+  text-align: center;
+  border: 3px solid #000000;
+}
+.card-image-wrapper {
+  height: 320px;
+}
+.card-image-wrapper img {
+  /* width: 150px; */
+}
+.card-details-wrapper {
+  text-align: left;
+}
+.card-details-wrapper p {
+  border: 1px solid #ccc;
+}

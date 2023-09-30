@@ -4,7 +4,17 @@
   min-height: 100vh;
   justify-content: center;
 }
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: #d3dbe0;
+  box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
+}
 .main {
+  margin-top: 110px;
   padding-bottom: 30px;
   flex: 1;
 }
@@ -16,9 +26,7 @@
   align-items: center;
 }
 .image-container img {
-  max-width: 200px;
-  max-height: 100px;
-  height: auto;
+  max-width: 100px;
 }
 .footer {
   background-color: #333;
@@ -30,10 +38,11 @@
 .cards-tray {
   display: flex;
   flex-wrap: wrap;
+  background-color: #ffffff;
 }
 .card {
-  width: 20%; /* 20% width to fit 5 cards per row */
-  box-sizing: border-box; /* Prevent padding or borders from affecting width */
+  width: 20%;
+  box-sizing: border-box;
   padding: 10px;
   text-align: center;
   border: 3px solid #000000;
@@ -41,12 +50,6 @@
 .card-image-wrapper {
   height: 320px;
 }
-.card-image-wrapper img {
-  /* width: 150px; */
-}
 .card-details-wrapper {
   text-align: left;
-}
-.card-details-wrapper p {
-  border: 1px solid #ccc;
 }

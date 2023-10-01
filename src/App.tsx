@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
-import Header from "./Header.tsx";
 import Footer from "./footer.tsx";
+import logo from "./assets/magic-logo.png";
+import cardsNotAvailable from "./assets/cards-not-available.jpg";
 import "./App.css";
+import { MDBBtn, MDBInput } from "mdb-react-ui-kit";
+import "mdb-react-ui-kit/dist/css/mdb.min.css";
 
 type Card = {
   name: string;
@@ -12,8 +15,11 @@ type Card = {
 
 function App() {
   const [cards, setCards] = useState<Card[]>([]);
+  const [cardsCurrentCount, setCardsCurrentCount] = useState(0);
+  const [cardsTotal, setCardsTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
+  const [searchTerm, setSearchTerm] = useState("");
   const [searchTermSubmitted, setSearchTermSubmitted] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -32,7 +38,7 @@ function App() {
       const scrollAtBottom =
         scrollPosition + windowHeight >= documentHeight - 900;
 
-      if (scrollAtBottom && !loading) {
+      if (scrollAtBottom && !loading && cardsCurrentCount == pageSize) {
         loadMoreCards();
       }
     };
@@ -43,6 +49,15 @@ function App() {
     };
   }, [loading]);
 
+  useEffect(() => {
+    if (searchTermSubmitted) {
+      setLoading(true);
+      setCards([]);
+      setCurrentPage(1);
+      setSearchTermSubmitted("");
+    }
+  }, [searchTerm]);
+
   const loadMoreCards = () => {
     if (!loading) {
       setLoading(true);
@@ -51,11 +66,24 @@ function App() {
   };
 
   const fetchCards = (url: string) => {
+    console.log("fetchCards", url, loading);
     fetch(url, {
       method: "GET",
       credentials: "same-origin",
     })
-      .then((response) => response.json())
+      .then((response) => {
+        const totalCountHeader = response.headers.get("Total-Count");
+        const currentCountHeader = response.headers.get("Count");
+        const totalCount = totalCountHeader
+          ? parseInt(totalCountHeader, 10)
+          : 0;
+        const currentCount = currentCountHeader
+          ? parseInt(currentCountHeader, 10)
+          : 0;
+        setCardsCurrentCount(currentCount);
+        setCardsTotal(totalCount);
+        return response.json();
+      })
       .then((data) => {
         const newCards: Card[] = data.cards || [];
         if (newCards.length > 0) {
@@ -70,9 +98,59 @@ function App() {
       });
   };
 
+  const handleSearch = () => {
+    if (searchTerm !== searchTermSubmitted) {
+      setLoading(true);
+      setCards([]);
+      setCurrentPage(1);
+      setSearchTermSubmitted(searchTerm);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchTerm("");
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSearch();
+    }
+  };
+
   return (
     <div className="wrapper">
-      <Header cardsLength={cards.length} />
+      <header className="fixed-header">
+        <div className="header-items">
+          <div className="image-container">
+            <img src={logo} alt="Magic Logo" />
+          </div>
+          <span className="action-items">
+            <span>
+              <p className="cards-count">
+                Cards displayed: {cards.length}/{cardsTotal}
+              </p>
+            </span>
+            <span className="action-item">
+              <MDBInput
+                type="text"
+                label="Search by Name"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+            </span>
+            <span className="action-item">
+              <MDBBtn onClick={handleSearch}>Search</MDBBtn>
+            </span>
+            <span className="action-item">
+              <MDBBtn color="danger" onClick={clearSearch}>
+                X
+              </MDBBtn>
+            </span>
+          </span>
+        </div>
+      </header>
       <div className="main">
         <div className="cards-tray">
           {cards.map((card, index) => (
@@ -83,7 +161,10 @@ function App() {
                 </strong>
               </p>
               <div className="card-image-wrapper">
-                <img src={card.imageUrl} alt={card.name} />
+                <img
+                  src={card.imageUrl ? card.imageUrl : cardsNotAvailable}
+                  alt={card.name}
+                />
               </div>
               <div className="card-details-wrapper">
                 <p>{card.type}</p>
@@ -92,7 +173,10 @@ function App() {
             </div>
           ))}
         </div>
-        {loading && <p>Loading...</p>}
+        <div className="alerts">
+          {loading && <p>Loading...</p>}
+          {cardsCurrentCount == 0 && !loading && <p>No Cards Found</p>}
+        </div>
       </div>
       <Footer />
     </div>

@@ -133,6 +133,7 @@ function App() {
             </span>
             <span className="action-item">
               <MDBInput
+                size="sm"
                 type="text"
                 label="Search by Name"
                 value={searchTerm}
@@ -141,10 +142,12 @@ function App() {
               />
             </span>
             <span className="action-item">
-              <MDBBtn onClick={handleSearch}>Search</MDBBtn>
+              <MDBBtn size="sm" onClick={handleSearch}>
+                Search
+              </MDBBtn>
             </span>
             <span className="action-item">
-              <MDBBtn color="danger" onClick={clearSearch}>
+              <MDBBtn size="sm" color="danger" onClick={clearSearch}>
                 X
               </MDBBtn>
             </span>
@@ -155,20 +158,20 @@ function App() {
         <div className="cards-tray">
           {cards.map((card, index) => (
             <div className="card" key={index}>
-              <p>
-                <strong>
-                  {index + 1}. {card.name}
-                </strong>
-              </p>
               <div className="card-image-wrapper">
                 <img
                   src={card.imageUrl ? card.imageUrl : cardsNotAvailable}
                   alt={card.name}
                 />
               </div>
+              <p>
+                <strong>{card.name}</strong>
+              </p>
               <div className="card-details-wrapper">
-                <p>{card.type}</p>
-                <p>{card.text}</p>
+                <ul>
+                  <li>{card.type}</li>
+                  <li>{card.text}</li>
+                </ul>
               </div>
             </div>
           ))}

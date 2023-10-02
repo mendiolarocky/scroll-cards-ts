@@ -68,6 +68,10 @@
 .card-image-wrapper {
   height: 320px;
 }
+.card-image-wrapper img {
+  height: 310px;
+  width: 223px;
+}
 .card-details-wrapper {
   text-align: left;
 }

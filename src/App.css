@@ -85,3 +85,9 @@
   justify-content: center;
   align-items: center;
 }
+.card-index {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  font-size: x-small;
+}

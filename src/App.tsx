@@ -173,6 +173,7 @@ function App() {
                   <li>{card.text}</li>
                 </ul>
               </div>
+              <div className="card-index">{index + 1}</div>
             </div>
           ))}
         </div>
